@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import {
   Card,
@@ -33,7 +34,7 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
   const [date, setDate] = useState(currentDate);
 
   const newMovies = movies.filter(
-    (m) => !memberSubscriptions?.movies.some((subMovie) => subMovie.movieId === m._id)
+    (m) => !memberSubscriptions?.movies.some((subMovie) => subMovie.movieId === m._id),
   );
 
   const [movieName, setMovieName] = useState(newMovies[0]?.name);
@@ -55,13 +56,13 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
       });
 
       const { data } = await axios.put(
-        `http://localhost:8000/subscriptions/${memberSubscriptions._id}`,
+        `${API_URL}/subscriptions/${memberSubscriptions._id}`,
         { movies: newMovies },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       console.log(data);
     } else {
@@ -72,7 +73,7 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
 
       dispatch({ type: "ADD_SUBSCRIPTION", payload: obj });
 
-      const { data } = await axios.post("http://localhost:8000/subscriptions", obj, {
+      const { data } = await axios.post(`${API_URL}/subscriptions`, obj, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -84,26 +85,23 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
   const deleteMember = async () => {
     dispatch({ type: "DELETE_MEMBER", payload: member._id });
 
-    const { data: response } = await axios.delete(
-      `http://localhost:8000/members/${member._id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const { data: response } = await axios.delete(`${API_URL}/members/${member._id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     console.log(response);
 
     if (memberSubscriptions) {
       dispatch({ type: "DELETE_SUBSCRIPTION", payload: memberSubscriptions._id });
 
       const { data: response } = await axios.delete(
-        `http://localhost:8000/subscriptions/${memberSubscriptions._id}`,
+        `${API_URL}/subscriptions/${memberSubscriptions._id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       console.log(response);
     }
@@ -254,7 +252,7 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
             )}
             {memberSubscriptions?.movies.map((movie) => {
               const movieData = movies.find(
-                (movieData) => movieData._id === movie.movieId
+                (movieData) => movieData._id === movie.movieId,
               );
               return movieData ? (
                 <List key={movie.movieId}>
@@ -265,7 +263,7 @@ const Member = ({ member, isEditVisible, isDeleteVisible }) => {
                         {
                           state: { movieName: movieData.name },
                         },
-                        { replace: true }
+                        { replace: true },
                       )
                     }
                     style={{

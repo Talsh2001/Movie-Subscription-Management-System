@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Box, Typography, Button } from "@mui/material";
 
@@ -28,13 +29,13 @@ const EditMember = () => {
     dispatch({ type: "UPDATE_MEMBER", payload: { ...updatedMember, _id: id } });
 
     const { data: response } = await axios.put(
-      `http://localhost:8000/members/${id}`,
+      `${API_URL}/members/${id}`,
       updatedMember,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
     console.log(response);
   };

@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const url = "http://localhost:3000";
+const url = process.env.SUBSCRIPTIONS_SERVER_URL || "http://localhost:3000";
 
 const getAllRoute = async (router) => {
   const { data } = await axios.get(`${url}/${router}`);

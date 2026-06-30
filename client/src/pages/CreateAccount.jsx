@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Box, Typography, Button, Link } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -8,7 +9,7 @@ const CreateAccount = () => {
   const [user, setUser] = useState({});
 
   const manageCreate = async () => {
-    const { data: users } = await axios.get(`http://localhost:8000/users`);
+    const { data: users } = await axios.get(`${API_URL}/users`);
 
     const currentUser = users.find((u) => u.username === user.username);
 
@@ -20,10 +21,9 @@ const CreateAccount = () => {
       alert("User Already Has a Valid Password");
     }
 
-    const { data: resp } = await axios.put(
-      `http://localhost:8000/users/${currentUser._id}`,
-      { password: user.password }
-    );
+    const { data: resp } = await axios.put(`${API_URL}/users/${currentUser._id}`, {
+      password: user.password,
+    });
 
     console.log(resp);
   };

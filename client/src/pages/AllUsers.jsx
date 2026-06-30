@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import User from "../components/User";
+import API_URL from "../config/api";
 
 const AllUsers = () => {
   const [usersData, setUsersData] = useState([]);
@@ -8,18 +9,18 @@ const AllUsers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: users } = await axios.get("http://localhost:8000/users");
+        const { data: users } = await axios.get(`${API_URL}/users`);
         const { data: usersFileData } = await axios.get(
-          "http://localhost:8000/files/read-users-file"
+          `${API_URL}/files/read-users-file`,
         );
         const { data: permissionsFile } = await axios.get(
-          "http://localhost:8000/files/read-permissions-file"
+          `${API_URL}/files/read-permissions-file`,
         );
 
         const combinedArray = users.map((user) => {
           const userFile = usersFileData.users.find((file) => file.id === user._id);
           const userPermissions = permissionsFile.permissions.find(
-            (permission) => permission.userId === user._id
+            (permission) => permission.userId === user._id,
           );
 
           return {

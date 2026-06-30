@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Typography, Box, Button } from "@mui/material";
 
@@ -183,33 +184,31 @@ const AddUser = () => {
 
   const save = async (e) => {
     e.preventDefault();
-    const { data: addUserResp } = await axios.post("http://localhost:8000/users", {
+    const { data: addUserResp } = await axios.post(`${API_URL}/users`, {
       username: username.username,
     });
     console.log(addUserResp);
 
-    const { data: userId } = await axios.get(
-      `http://localhost:8000/users/id/${username.username}`
-    );
+    const { data: userId } = await axios.get(`${API_URL}/users/id/${username.username}`);
 
     const { data: usersFileResp } = await axios.post(
-      "http://localhost:8000/files/write-users-file",
+      `${API_URL}/files/write-users-file`,
       {
         id: userId,
         firstName: userData.firstName,
         lastName: userData.lastName,
         CreatedDate: userData.createdDate,
         sessionTimeOut: userData.sessionTimeOut,
-      }
+      },
     );
     console.log(usersFileResp);
 
     const { data: permissionsFileResp } = await axios.post(
-      "http://localhost:8000/files/write-permissions-file",
+      `${API_URL}/files/write-permissions-file`,
       {
         userId: userId,
         permissions: userData.permissions,
-      }
+      },
     );
     console.log(permissionsFileResp);
   };

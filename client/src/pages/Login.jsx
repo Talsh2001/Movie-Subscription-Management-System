@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config/api";
 
-const url = "http://localhost:8000/users/login";
+const url = `${API_URL}/users/login`;
 
 import { Typography, Button, Box, TextField, Link } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -61,19 +62,15 @@ const Login = () => {
     const { data } = await axios.post(url, user);
     sessionStorage.setItem("accessToken", data.accessToken);
 
-    const { data: users } = await axios.get(
-      "http://localhost:8000/files/read-users-file"
-    );
+    const { data: users } = await axios.get(`${API_URL}/files/read-users-file`);
 
-    const { data: id } = await axios.get(
-      `http://localhost:8000/users/id/${user.username}`
-    );
+    const { data: id } = await axios.get(`${API_URL}/users/id/${user.username}`);
 
     const currentUser = users.users.find((u) => u.id === id);
 
     sessionStorage.setItem(
       "userFullName",
-      `${currentUser.firstName} ${currentUser.lastName}`
+      `${currentUser.firstName} ${currentUser.lastName}`,
     );
 
     navigate("/main");

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Card, Typography, Button, Box } from "@mui/material";
 
@@ -7,22 +8,18 @@ const User = ({ user }) => {
   const navigate = useNavigate();
 
   const deleteUser = async () => {
-    const { data: userId } = await axios.get(
-      `http://localhost:8000/users/id/${user.username}`
-    );
+    const { data: userId } = await axios.get(`${API_URL}/users/id/${user.username}`);
 
-    const { data: deleteUser } = await axios.delete(
-      `http://localhost:8000/users/${userId}`
-    );
+    const { data: deleteUser } = await axios.delete(`${API_URL}/users/${userId}`);
     console.log(deleteUser);
 
     const { data: deleteUserFile } = await axios.post(
-      `http://localhost:8000/files/remove-user/${userId}`
+      `${API_URL}/files/remove-user/${userId}`,
     );
     console.log(deleteUserFile);
 
     const { data: deletePermissionFile } = await axios.post(
-      `http://localhost:8000/files/remove-permission/${userId}`
+      `${API_URL}/files/remove-permission/${userId}`,
     );
     console.log(deletePermissionFile);
   };
@@ -62,7 +59,7 @@ const User = ({ user }) => {
                   {
                     state: { user: user },
                   },
-                  { replace: true }
+                  { replace: true },
                 )
               }
             >

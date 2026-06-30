@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import {
   Card,
@@ -30,24 +31,18 @@ const Movie = ({ movie, isEditVisible, isDeleteVisible }) => {
   const deleteMovie = async () => {
     dispatch({ type: "DELETE_MOVIE", payload: movie._id });
 
-    const { data: response } = await axios.delete(
-      `http://localhost:8000/movies/${movie._id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const { data: response } = await axios.delete(`${API_URL}/movies/${movie._id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     console.log(response);
 
-    const { data: subscriptions } = await axios.get(
-      "http://localhost:8000/subscriptions",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const { data: subscriptions } = await axios.get(`${API_URL}/subscriptions`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     const newSubs = subscriptions.map((sub) => {
       return {
@@ -62,13 +57,13 @@ const Movie = ({ movie, isEditVisible, isDeleteVisible }) => {
     newSubs.forEach(async (sub) => {
       const { _id, ...dataToSend } = sub;
       const { data: response } = await axios.put(
-        `http://localhost:8000/subscriptions/${sub._id}`,
+        `${API_URL}/subscriptions/${sub._id}`,
         dataToSend,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       console.log(response);
     });
@@ -76,17 +71,14 @@ const Movie = ({ movie, isEditVisible, isDeleteVisible }) => {
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
-      const { data: subscriptions } = await axios.get(
-        "http://localhost:8000/subscriptions",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const { data: subscriptions } = await axios.get(`${API_URL}/subscriptions`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       const filterByMovieId = (array, movieId) => {
         return array.filter((obj) =>
-          obj.movies.some((movie) => movie.movieId === movieId)
+          obj.movies.some((movie) => movie.movieId === movieId),
         );
       };
 
@@ -94,7 +86,7 @@ const Movie = ({ movie, isEditVisible, isDeleteVisible }) => {
 
       setMoviesSubscriptions(movieSubscriptions);
 
-      const { data: membersData } = await axios.get("http://localhost:8000/members", {
+      const { data: membersData } = await axios.get(`${API_URL}/members`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

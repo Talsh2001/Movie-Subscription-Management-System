@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Movie from "../components/Movie";
+import API_URL from "../config/api";
 
 import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -32,21 +33,19 @@ const AllMovies = () => {
   useEffect(() => {
     const fetchUserPermissions = async () => {
       const { data: permissionsData } = await axios.get(
-        "http://localhost:8000/files/read-permissions-file"
+        `${API_URL}/files/read-permissions-file`,
       );
 
-      const { data: users } = await axios.get(
-        "http://localhost:8000/files/read-users-file"
-      );
+      const { data: users } = await axios.get(`${API_URL}/files/read-users-file`);
 
       const fullName = sessionStorage.getItem("userFullName");
 
       const currentUser = users.users.find(
-        (u) => u.firstName + " " + u.lastName === fullName
+        (u) => u.firstName + " " + u.lastName === fullName,
       );
 
       const userPermissions = permissionsData.permissions.find(
-        (per) => per.userId === currentUser.id
+        (per) => per.userId === currentUser.id,
       );
 
       const permissions = userPermissions.permissions;
@@ -78,7 +77,7 @@ const AllMovies = () => {
     const filtered = movies
       .filter((movie) => (movieName ? movie.name.includes(movieName) : true))
       .filter((movie) =>
-        findText ? movie.name.toLowerCase().includes(findText.toLowerCase()) : true
+        findText ? movie.name.toLowerCase().includes(findText.toLowerCase()) : true,
       );
 
     setFilteredMovies(filtered);

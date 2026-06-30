@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Box, Button, Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -19,21 +20,19 @@ const AddMember = () => {
   useEffect(() => {
     const fetchUserPermissions = async () => {
       const { data: permissionsData } = await axios.get(
-        "http://localhost:8000/files/read-permissions-file"
+        `${API_URL}/files/read-permissions-file`,
       );
 
-      const { data: users } = await axios.get(
-        "http://localhost:8000/files/read-users-file"
-      );
+      const { data: users } = await axios.get(`${API_URL}/files/read-users-file`);
 
       const fullName = sessionStorage.getItem("userFullName");
 
       const currentUser = users.users.find(
-        (u) => u.firstName + " " + u.lastName === fullName
+        (u) => u.firstName + " " + u.lastName === fullName,
       );
 
       const userPermissions = permissionsData.permissions.find(
-        (per) => per.userId === currentUser.id
+        (per) => per.userId === currentUser.id,
       );
 
       const permissions = userPermissions.permissions;
@@ -49,15 +48,11 @@ const AddMember = () => {
 
   const saveMember = async () => {
     dispatch({ type: "ADD_MEMBER", payload: newMember });
-    const { data: response } = await axios.post(
-      "http://localhost:8000/members",
-      newMember,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const { data: response } = await axios.post(`${API_URL}/members`, newMember, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     console.log(response);
   };
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Member from "../components/Member";
+import API_URL from "../config/api";
 
 import { Box, Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -17,21 +18,19 @@ const AllMembers = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { data: permissionsData } = await axios.get(
-        "http://localhost:8000/files/read-permissions-file"
+        `${API_URL}/files/read-permissions-file`,
       );
 
-      const { data: users } = await axios.get(
-        "http://localhost:8000/files/read-users-file"
-      );
+      const { data: users } = await axios.get(`${API_URL}/files/read-users-file`);
 
       const fullName = sessionStorage.getItem("userFullName");
 
       const currentUser = users.users.find(
-        (u) => u.firstName + " " + u.lastName === fullName
+        (u) => u.firstName + " " + u.lastName === fullName,
       );
 
       const userPermissions = permissionsData.permissions.find(
-        (per) => per.userId === currentUser.id
+        (per) => per.userId === currentUser.id,
       );
 
       const permissions = userPermissions.permissions;

@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Typography, Box, Button } from "@mui/material";
 
@@ -25,9 +26,7 @@ const EditUser = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: userId } = await axios.get(
-        `http://localhost:8000/users/id/${user.username}`
-      );
+      const { data: userId } = await axios.get(`${API_URL}/users/id/${user.username}`);
       setUserId(userId);
     };
     fetchData();
@@ -190,10 +189,7 @@ const EditUser = () => {
 
   const update = async (e) => {
     e.preventDefault();
-    const { data: response } = await axios.put(
-      `http://localhost:8000/users/${userId}`,
-      userData
-    );
+    const { data: response } = await axios.put(`${API_URL}/users/${userId}`, userData);
     console.log(response);
 
     const updatedUser = {
@@ -204,23 +200,23 @@ const EditUser = () => {
       sessionTimeOut: userData.sessionTimeOut,
     };
     const { data: user } = await axios.post(
-      `http://localhost:8000/files/update-user/${userId}`,
-      updatedUser
+      `${API_URL}/files/update-user/${userId}`,
+      updatedUser,
     );
     console.log(user);
 
     navigate(
       "/main/users/edit-user",
       { state: { user: { ...userData, ...updatedUser } } },
-      { replace: true }
+      { replace: true },
     );
 
     const { data: permissions } = await axios.post(
-      `http://localhost:8000/files/update-permissions/${userId}`,
+      `${API_URL}/files/update-permissions/${userId}`,
       {
         userId: userId,
         permissions: [...userData.permissions],
-      }
+      },
     );
     console.log(permissions);
   };

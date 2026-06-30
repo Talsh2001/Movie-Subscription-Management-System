@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import { Box, Typography, Button } from "@mui/material";
 
@@ -23,7 +24,7 @@ const EditMovie = () => {
 
   useEffect(() => {
     const fetchMovie = async () => {
-      const { data } = await axios.get(`http://localhost:8000/movies/${id}`, {
+      const { data } = await axios.get(`${API_URL}/movies/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -43,28 +44,24 @@ const EditMovie = () => {
     if (Array.isArray(movie.genres)) {
       dispatch({ type: "UPDATE_MOVIE", payload: movie });
 
-      const { data: response } = await axios.put(
-        `http://localhost:8000/movies/${id}`,
-        movie,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const { data: response } = await axios.put(`${API_URL}/movies/${id}`, movie, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       console.log(response);
     } else {
       dispatch({ type: "UPDATE_MOVIE", payload: movie });
 
       const updatedGenres = parseGenres(movie.genres);
       const { data: response } = await axios.put(
-        `http://localhost:8000/movies/${id}`,
+        `${API_URL}/movies/${id}`,
         { ...movie, genres: updatedGenres },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }
+        },
       );
       console.log(response);
     }

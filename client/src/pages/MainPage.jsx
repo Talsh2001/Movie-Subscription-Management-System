@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import API_URL from "../config/api";
 
 import {
   AppBar,
@@ -53,7 +54,7 @@ const ReusableButton = (props) => {
 
 const MainPage = () => {
   const [userFullName, setUserFullName] = useState(
-    sessionStorage.getItem("userFullName")
+    sessionStorage.getItem("userFullName"),
   );
 
   const dispatch = useDispatch();
@@ -63,28 +64,25 @@ const MainPage = () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
 
-        const { data: membersResponse } = await axios.get(
-          "http://localhost:8000/members",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const { data: membersResponse } = await axios.get(`${API_URL}/members`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-        const { data: moviesResponse } = await axios.get("http://localhost:8000/movies", {
+        const { data: moviesResponse } = await axios.get(`${API_URL}/movies`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
 
         const { data: subscriptionsResponse } = await axios.get(
-          "http://localhost:8000/subscriptions",
+          `${API_URL}/subscriptions`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          }
+          },
         );
 
         dispatch({
