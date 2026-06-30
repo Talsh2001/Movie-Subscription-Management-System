@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { findUser } = require("../BLL/userBLL");
 
-const JWT_SECRET = "secret";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const getToken = (req) => {
   const tokenHeader = req.headers.authorization;

@@ -12,7 +12,7 @@ const {
 
 const router = express.Router();
 
-const JWT_SECRET = "secret";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 router.get("/", async (req, res) => {
   try {
