@@ -16,7 +16,7 @@ const Movie = require("./models/moviesModel");
 const RESET_DB = false;
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 connectDB();
 
@@ -49,7 +49,7 @@ const ensureCollectionsExists = async () => {
             email: member.email,
             city: member.address.city,
           });
-        })
+        }),
       );
     }
 
@@ -63,7 +63,7 @@ const ensureCollectionsExists = async () => {
             image: movie.image.medium,
             premiered: movie.premiered,
           });
-        })
+        }),
       );
     }
     console.log("Successfully added members and movies");
