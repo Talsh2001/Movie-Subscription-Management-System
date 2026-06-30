@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const connectSubsDB = () => {
-  mongoose
-    .connect("mongodb://127.0.0.1:27017/usersDB")
-    .then(() => {
-      console.log("Connected to usersDB");
-    })
-    .catch((error) => console.log(error));
+const connectUsersDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to usersDB");
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-module.exports = connectSubsDB;
+module.exports = connectUsersDB;
